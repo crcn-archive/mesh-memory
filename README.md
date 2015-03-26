@@ -1,0 +1,60 @@
+[![Build Status](https://travis-ci.org/crcn/crudlet-memory.svg)](https://travis-ci.org/crcn/crudlet-memory) [![Coverage Status](https://coveralls.io/repos/crcn/crudlet-memory/badge.svg?branch=master)](https://coveralls.io/r/crcn/crudlet-memory?branch=master) [![Dependency Status](https://david-dm.org/crcn/crudlet-memory.svg)](https://david-dm.org/crcn/crudlet-memory) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/crcn/crudlet-memory?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+in-memory adapter for [crudlet](https://github.com/crcn/crudlet.js) - a library that makes it easy to persist data through multiple transports.
+
+#### installation
+
+```
+npm install crudlet-memory
+```
+
+```javascript
+var crudlet = require("crudlet");
+var memorydb = require("crudlet-memory");
+
+var db = crudlet(memorydb());
+```
+
+#### db memorydb(options)
+
+creates a local crudelt database
+
+- `options` - options for the local db
+  - `name` - name of db (optional)
+  - `store` - store to use
+
+
+#### db.run(operation, options, onComplete)
+
+runs an operation
+
+- `operation` - operation to run can be: `insert`, `remove`, `update`, or `load`
+- `options` - operation specific options
+
+insert options:
+
+- `data` - data to insert. Can be an object, or an array to insert multiple
+
+```javascript
+db.run("insert", { data: [{ name: "a"}, { name: "b" }]}); // insert two items
+db.run("insert", { data: { name: "gg"}}); // insert one item
+```
+
+remove options:
+
+- `query` - mongodb search query
+- `multi` - TRUE if you want to remove multiple items (false by default)
+
+update options:
+
+- `query` - mongodb search query
+- `multi` - TRUE if you want to update multiple items (false by default)
+- `data` - data to set - this is merged with existing data
+
+load options:
+
+- `query` - mongodb search query
+- `multi` - TRUE if you want to load multiple items (one by default)
+
+
+

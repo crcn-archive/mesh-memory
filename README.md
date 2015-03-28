@@ -12,7 +12,16 @@ npm install crudlet-memory
 var crudlet = require("crudlet");
 var memorydb = require("crudlet-memory");
 
-var db = crudlet(memorydb());
+var db = memorydb();
+crudlet.run(db, "insert", { data: { name: "blarg"}}).on("data", function() {
+
+});
+
+// streaming operations
+crudlet.
+stream(db).
+write(crudlet.operation("insert", { data: { name: "abba"}})).
+end(crudlet.operation("remove", { query: { name: "abba"}}));
 ```
 
 #### db memorydb(options)
@@ -23,9 +32,6 @@ creates a local crudelt database
   - `name` - name of db (optional)
   - `store` - store to use
 
-
-#### db.run(operation, options, onComplete)
-
 runs an operation
 
 - `operation` - operation to run can be: `insert`, `remove`, `update`, or `load`
@@ -34,11 +40,6 @@ runs an operation
 insert options:
 
 - `data` - data to insert. Can be an object, or an array to insert multiple
-
-```javascript
-db.run("insert", { data: [{ name: "a"}, { name: "b" }]}); // insert two items
-db.run("insert", { data: { name: "gg"}}); // insert one item
-```
 
 remove options:
 
@@ -55,6 +56,3 @@ load options:
 
 - `query` - mongodb search query
 - `multi` - TRUE if you want to load multiple items (one by default)
-
-
-

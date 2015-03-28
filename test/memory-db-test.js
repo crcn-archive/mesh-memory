@@ -34,7 +34,7 @@ describe(__filename + "#", function() {
 
     crudlet.run(db, "insert", { abba: { a: 1}}).on("error", function(err) {
       expect(err).not.to.be(void 0);
-    }).on("data",function(){}).on("end", next);
+    }).on("data", function() { }).on("end", next);
 
   });
 
@@ -85,7 +85,7 @@ describe(__filename + "#", function() {
 
   it("can update an item with a query", function(next) {
     var db   = memoryDatabase({collection:"people"});
-    var stream = crudlet.stream(db).on("data",function() { }).on("end", function() {
+    var stream = crudlet.stream(db).on("data", function() { }).on("end", function() {
       expect(db.target.db.people[0].name).to.be("baab");
       expect(db.target.db.people[1].name).to.be("abba");
       next();
@@ -99,7 +99,7 @@ describe(__filename + "#", function() {
   it("can update multiple items with a query", function(next) {
 
     var db   = memoryDatabase({collection:"people"});
-    var stream = crudlet.stream(db).on("data",function() { }).on("end", function() {
+    var stream = crudlet.stream(db).on("data", function() { }).on("end", function() {
       expect(db.target.db.people[0].name).to.be("baab");
       expect(db.target.db.people[1].name).to.be("baab");
       next();
@@ -114,7 +114,7 @@ describe(__filename + "#", function() {
   it("can remove an item, and only one item", function(next) {
 
     var db   = memoryDatabase({collection:"people"});
-    var stream = crudlet.stream(db).on("data",function() { }).on("end", function() {
+    var stream = crudlet.stream(db).on("data", function() { }).on("end", function() {
       expect(db.target.db.people.length).to.be(1);
       next();
     });
@@ -126,7 +126,7 @@ describe(__filename + "#", function() {
 
   it("can remove multiple items", function(next) {
     var db   = memoryDatabase({collection:"people"});
-    var stream = crudlet.stream(db).on("data",function() { }).on("end", function() {
+    var stream = crudlet.stream(db).on("data", function() { }).on("end", function() {
       expect(db.target.db.people.length).to.be(0);
       next();
     });
@@ -138,40 +138,39 @@ describe(__filename + "#", function() {
 
   it("can load one item", function(next) {
 
-      var db   = memoryDatabase({collection:"people"});
-      var items = [];
-      var stream = crudlet.stream(db);
-      stream.write(crudlet.operation("insert", { data: { name: "abba" }}));
-      stream.end(crudlet.operation("insert", { data: { name: "abba" }}));
+    var db   = memoryDatabase({collection:"people"});
+    var items = [];
+    var stream = crudlet.stream(db);
+    stream.write(crudlet.operation("insert", { data: { name: "abba" }}));
+    stream.end(crudlet.operation("insert", { data: { name: "abba" }}));
 
-      stream = crudlet.stream(db);
-      stream.on("data", function(data) {
-        items.push(data);
-      }).on("end", function() {
-        expect(items.length).to.be(1);
-        next();
-      });
+    stream = crudlet.stream(db);
+    stream.on("data", function(data) {
+      items.push(data);
+    }).on("end", function() {
+      expect(items.length).to.be(1);
+      next();
+    });
 
-      stream.end(crudlet.operation("load", { query: { name: "abba" }}));
+    stream.end(crudlet.operation("load", { query: { name: "abba" }}));
 
   });
 
   it("can load multiple items", function(next) {
-      var db   = memoryDatabase({collection:"people"});
-      var items = [];
-      var stream = crudlet.stream(db);
-      stream.write(crudlet.operation("insert", { data: { name: "abba" }}));
-      stream.end(crudlet.operation("insert", { data: { name: "abba" }}));
+    var db   = memoryDatabase({collection:"people"});
+    var items = [];
+    var stream = crudlet.stream(db);
+    stream.write(crudlet.operation("insert", { data: { name: "abba" }}));
+    stream.end(crudlet.operation("insert", { data: { name: "abba" }}));
 
-      stream = crudlet.stream(db);
-      stream.on("data", function(data) {
+    stream = crudlet.stream(db);
+    stream.on("data", function(data) {
+      items.push(data);
+    }).on("end", function() {
+      expect(items.length).to.be(2);
+      next();
+    });
 
-        items.push(data);
-      }).on("end", function() {
-        expect(items.length).to.be(2);
-        next();
-      });
-
-      stream.end(crudlet.operation("load", { multi: true, query: { name: "abba" }}));
+    stream.end(crudlet.operation("load", { multi: true, query: { name: "abba" }}));
   });
 });

@@ -19,7 +19,7 @@ db("insert", { data: { name: "blarg"}}).on("data", function() {
 
 // streaming operations
 crudlet.
-stream(db).
+open(db).
 write(crudlet.operation("insert", { data: { name: "abba"}})).
 end(crudlet.operation("remove", { query: { name: "abba"}}));
 ```

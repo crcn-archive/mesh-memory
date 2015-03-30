@@ -14,7 +14,8 @@ describe(__filename + "#", function() {
   it("can add memory specific options", function(next) {
     var db   = memoryDatabase({ collection: "words", storageKey: "abba" });
     var setStub = sinon.spy(db.target, "insert");
-    crudlet.run(db, "insert", { memory: { a: 1}}).on("data", function() {
+
+    db("insert", { memory: { a: 1}}).on("data", function() {
       expect(setStub.callCount).to.be(1);
       expect(setStub.firstCall.args[1].a).to.be(1);
     }).on("end", next);
@@ -23,7 +24,7 @@ describe(__filename + "#", function() {
   it("can change the name of the memory specific options", function(next) {
     var db   = memoryDatabase({ name: "abba", collection: "words", storageKey: "abba" });
     var setStub = sinon.spy(db.target, "insert");
-    crudlet.run(db, "insert", { abba: { a: 1}}).on("data", function() {
+    db("insert", { abba: { a: 1}}).on("data", function() {
       expect(setStub.callCount).to.be(1);
       expect(setStub.firstCall.args[1].a).to.be(1);
     }).on("end", next);
@@ -32,7 +33,7 @@ describe(__filename + "#", function() {
   it("returns an error if collection is not specified", function(next) {
     var db   = memoryDatabase();
 
-    crudlet.run(db, "insert", { abba: { a: 1}}).on("error", function(err) {
+    db("insert", { abba: { a: 1}}).on("error", function(err) {
       expect(err).not.to.be(void 0);
     }).on("data", function() { }).on("end", next);
 
@@ -40,7 +41,7 @@ describe(__filename + "#", function() {
 
   it("can specify collection in constructor", function(next) {
     var db   = memoryDatabase({ collection: "words" });
-    crudlet.run(db, "insert", { data: { name: "abba" }}).on("data", function(data) {
+    db("insert", { data: { name: "abba" }}).on("data", function(data) {
       expect(data.name).to.be("abba");
       next();
     });
@@ -48,26 +49,10 @@ describe(__filename + "#", function() {
 
   it("can insert an item", function(next) {
     var db   = memoryDatabase({collection:"people"});
-    crudlet.run(db, "insert", { data: { name: "abba" }}).on("data", function() {
+    db("insert", { data: { name: "abba" }}).on("data", function() {
       expect(db.target.db.people[0].name).to.be("abba");
       next();
     });
-  });
-
-  xit("emits willRun", function() {
-    var db   = crudlet(memoryDatabase({collection:"people"}));
-    var i = 0;
-    db.target.on("willRun", function() { i++; });
-    db.insert({ data: { name: "abba" }});
-    expect(i).to.be(1);
-  });
-
-  xit("emits didRun", function() {
-    var db   = crudlet(memoryDatabase({collection:"people"}));
-    var i = 0;
-    db.target.on("didRun", function() { i++; });
-    db.insert({ data: { name: "abba" }});
-    expect(i).to.be(1);
   });
 
   it("can insert multiple items at once", function(next) {
@@ -75,7 +60,7 @@ describe(__filename + "#", function() {
 
     var items = [];
 
-    crudlet.run(db, "insert", { data: [{ name: "abba" }, {name:"baab"}]}).on("data", function(data) {
+    db("insert", { data: [{ name: "abba" }, {name:"baab"}]}).on("data", function(data) {
       items.push(data);
     }).on("end", function() {
       expect(items.length).to.be(2);
@@ -85,7 +70,7 @@ describe(__filename + "#", function() {
 
   it("can update an item with a query", function(next) {
     var db   = memoryDatabase({collection:"people"});
-    var stream = crudlet.stream(db).on("data", function() { }).on("end", function() {
+    var stream = crudlet.open(db).on("data", function() { }).on("end", function() {
       expect(db.target.db.people[0].name).to.be("baab");
       expect(db.target.db.people[1].name).to.be("abba");
       next();
@@ -99,7 +84,7 @@ describe(__filename + "#", function() {
   it("can update multiple items with a query", function(next) {
 
     var db   = memoryDatabase({collection:"people"});
-    var stream = crudlet.stream(db).on("data", function() { }).on("end", function() {
+    var stream = crudlet.open(db).on("data", function() { }).on("end", function() {
       expect(db.target.db.people[0].name).to.be("baab");
       expect(db.target.db.people[1].name).to.be("baab");
       next();
@@ -159,19 +144,23 @@ describe(__filename + "#", function() {
   it("can load multiple items", function(next) {
     var db   = memoryDatabase({collection:"people"});
     var items = [];
-    var stream = crudlet.stream(db);
+    var stream = crudlet.open(db);
     stream.write(crudlet.operation("insert", { data: { name: "abba" }}));
+
+    stream.on("data", function(){});
+    stream.on("end", function() {
+      stream = crudlet.open(db);
+      stream.on("data", function(data) {
+        items.push(data);
+      }).on("end", function() {
+        expect(items.length).to.be(2);
+        next();
+      });
+
+      stream.end(crudlet.operation("load", { multi: true, query: { name: "abba" }}));
+    })
+
     stream.end(crudlet.operation("insert", { data: { name: "abba" }}));
-
-    stream = crudlet.stream(db);
-    stream.on("data", function(data) {
-      items.push(data);
-    }).on("end", function() {
-      expect(items.length).to.be(2);
-      next();
-    });
-
-    stream.end(crudlet.operation("load", { multi: true, query: { name: "abba" }}));
   });
 
   it("can load all items", function(next) {
@@ -179,16 +168,19 @@ describe(__filename + "#", function() {
     var items = [];
     var stream = crudlet.stream(db);
     stream.write(crudlet.operation("insert", { collection:"people", data: { name: "abba" }}));
+    stream.on("data", function(){});
+    stream.on("end", function() {
+      stream = crudlet.stream(db);
+      stream.on("data", function(data) {
+        items.push(data);
+      }).on("end", function() {
+        expect(items.length).to.be(2);
+        next();
+      });
+
+      stream.end(crudlet.operation("load", { multi: true, collection:"people" }));
+    });
     stream.end(crudlet.operation("insert", { collection:"people", data: { name: "abba" }}));
 
-    stream = crudlet.stream(db);
-    stream.on("data", function(data) {
-      items.push(data);
-    }).on("end", function() {
-      expect(items.length).to.be(2);
-      next();
-    });
-
-    stream.end(crudlet.operation("load", { multi: true, collection:"people" }));
   });
 });

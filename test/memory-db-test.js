@@ -173,4 +173,22 @@ describe(__filename + "#", function() {
 
     stream.end(crudlet.operation("load", { multi: true, query: { name: "abba" }}));
   });
+
+  it("can load all items", function(next) {
+    var db   = memoryDatabase();
+    var items = [];
+    var stream = crudlet.stream(db);
+    stream.write(crudlet.operation("insert", { collection:"people", data: { name: "abba" }}));
+    stream.end(crudlet.operation("insert", { collection:"people", data: { name: "abba" }}));
+
+    stream = crudlet.stream(db);
+    stream.on("data", function(data) {
+      items.push(data);
+    }).on("end", function() {
+      expect(items.length).to.be(2);
+      next();
+    });
+
+    stream.end(crudlet.operation("load", { multi: true, collection:"people" }));
+  });
 });

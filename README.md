@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/crcn/crudlet-memory.svg)](https://travis-ci.org/crcn/crudlet-memory) [![Coverage Status](https://coveralls.io/repos/crcn/crudlet-memory/badge.svg?branch=master)](https://coveralls.io/r/crcn/crudlet-memory?branch=master) [![Dependency Status](https://david-dm.org/crcn/crudlet-memory.svg)](https://david-dm.org/crcn/crudlet-memory) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/crcn/crudlet-memory?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Build Status](https://travis-ci.org/crcn/crudlet-memory.svg)](https://travis-ci.org/crcn/crudlet-memory) [![Coverage Status](https://coveralls.io/repos/crcn/crudlet-memory/badge.svg?branch=master)](https://coveralls.io/r/crcn/crudlet-memory?branch=master) [![Dependency Status](https://david-dm.org/crcn/crudlet-memory.svg)](https://david-dm.org/crcn/crudlet-memory)
 
 in-memory adapter for [crudlet](https://github.com/crcn/crudlet.js) - a library that makes it easy to persist data through multiple transports.
 

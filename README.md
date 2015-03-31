@@ -13,13 +13,13 @@ var crudlet = require("crudlet");
 var memorydb = require("crudlet-memory");
 
 var db = memorydb();
-crudlet.run(db, "insert", { data: { name: "blarg"}}).on("data", function() {
+db("insert", { data: { name: "blarg"}}).on("data", function() {
 
 });
 
 // streaming operations
 crudlet.
-stream(db).
+open(db).
 write(crudlet.operation("insert", { data: { name: "abba"}})).
 end(crudlet.operation("remove", { query: { name: "abba"}}));
 ```

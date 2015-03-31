@@ -183,4 +183,38 @@ describe(__filename + "#", function() {
     stream.end(crudlet.operation("insert", { collection:"people", data: { name: "abba" }}));
 
   });
+
+  it("load doesn't have to emit data", function(next) {
+    var i = 0;
+    var db   = crudlet.child(memoryDatabase(), { collection: "people" });
+    db("load").on("data", function(data) {
+      i++;
+    }).on("end", function() {
+      expect(i).to.be(0);
+      next();
+    });
+  });
+
+  it("can upsert & insert an item", function(next) {
+    var db   = crudlet.child(memoryDatabase(), { collection: "people" });
+    db("upsert", { data: { name: "abba"}, query: { name: "abba"}}).on("data", function() {
+      db("load", { query: { name: "abba" }}).on("data", function(data) {
+        expect(data.name).to.be("abba");
+        next();
+      });
+    });
+  });
+
+  it("can upsert & update an item", function(next) {
+    var db   = crudlet.child(memoryDatabase(), { collection: "people" });
+    db("upsert", { data: { name: "abba"}, query: { name: "abba"}}).on("data", function() {
+      db("upsert", { data: { age: 99 }, query: { name: "abba"}}).on("data", function() {
+        db("load", { query: { name: "abba" }}).on("data", function(data) {
+          expect(data.name).to.be("abba");
+          expect(data.age).to.be(99);
+          next();
+        });
+      });
+    });
+  });
 });

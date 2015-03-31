@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/crcn/crudlet-memory.svg)](https://travis-ci.org/crcn/crudlet-memory) [![Coverage Status](https://coveralls.io/repos/crcn/crudlet-memory/badge.svg?branch=master)](https://coveralls.io/r/crcn/crudlet-memory?branch=master) [![Dependency Status](https://david-dm.org/crcn/crudlet-memory.svg)](https://david-dm.org/crcn/crudlet-memory)
+[![Build Status](https://travis-ci.org/mojo-js/crudlet-memory.svg)](https://travis-ci.org/mojo-js/crudlet-memory) [![Coverage Status](https://coveralls.io/repos/mojo-js/crudlet-memory/badge.svg?branch=master)](https://coveralls.io/r/mojo-js/crudlet-memory?branch=master) [![Dependency Status](https://david-dm.org/mojo-js/crudlet-memory.svg)](https://david-dm.org/mojo-js/crudlet-memory)
 
-in-memory adapter for [crudlet](https://github.com/crcn/crudlet.js) - a library that makes it easy to persist data through multiple transports.
+in-memory adapter for [crudlet](https://github.com/mojo-js/crudlet.js) - a library that makes it easy to persist data through multiple transports.
 
 #### installation
 

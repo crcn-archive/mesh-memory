@@ -147,7 +147,7 @@ describe(__filename + "#", function() {
     var stream = crudlet.open(db);
     stream.write(crudlet.operation("insert", { data: { name: "abba" }}));
 
-    stream.on("data", function(){});
+    stream.on("data", function() { });
     stream.on("end", function() {
       stream = crudlet.open(db);
       stream.on("data", function(data) {
@@ -158,7 +158,7 @@ describe(__filename + "#", function() {
       });
 
       stream.end(crudlet.operation("load", { multi: true, query: { name: "abba" }}));
-    })
+    });
 
     stream.end(crudlet.operation("insert", { data: { name: "abba" }}));
   });
@@ -168,7 +168,7 @@ describe(__filename + "#", function() {
     var items = [];
     var stream = crudlet.stream(db);
     stream.write(crudlet.operation("insert", { collection:"people", data: { name: "abba" }}));
-    stream.on("data", function(){});
+    stream.on("data", function() { });
     stream.on("end", function() {
       stream = crudlet.stream(db);
       stream.on("data", function(data) {

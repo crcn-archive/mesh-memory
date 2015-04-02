@@ -1,6 +1,6 @@
 {
   "name": "crudlet-memory",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "local storage adapter (offline-mode) for crudlet",
   "main": "./lib/index.js",
   "scripts": {

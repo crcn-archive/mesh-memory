@@ -24,14 +24,14 @@ describe(__filename + "#", function() {
   it("can change the name of the memory specific options", function(next) {
     var db   = memoryDatabase({ name: "abba", collection: "words", storageKey: "abba" });
     var setStub = sinon.spy(db.target, "insert");
-    db("insert", { abba: { a: 1}}).on("data", function() {
+    crudlet.clean(db)("insert", { abba: { a: 1}}).on("data", function() {
       expect(setStub.callCount).to.be(1);
       expect(setStub.firstCall.args[1].a).to.be(1);
     }).on("end", next);
   });
 
   it("returns an error if collection is not specified", function(next) {
-    var db   = memoryDatabase();
+    var db   = crudlet.clean(memoryDatabase());
 
     db("insert", { abba: { a: 1}}).on("error", function(err) {
       expect(err).not.to.be(void 0);
@@ -40,7 +40,7 @@ describe(__filename + "#", function() {
   });
 
   it("can specify collection in constructor", function(next) {
-    var db   = memoryDatabase({ collection: "words" });
+    var db   = crudlet.clean(memoryDatabase({ collection: "words" }));
     db("insert", { data: { name: "abba" }}).on("data", function(data) {
       expect(data.name).to.be("abba");
       next();
@@ -49,7 +49,7 @@ describe(__filename + "#", function() {
 
   it("can insert an item", function(next) {
     var db   = memoryDatabase({collection:"people"});
-    db("insert", { data: { name: "abba" }}).on("data", function() {
+    crudlet.clean(db)("insert", { data: { name: "abba" }}).on("data", function() {
       expect(db.target.db.people[0].name).to.be("abba");
       next();
     });
@@ -60,7 +60,7 @@ describe(__filename + "#", function() {
 
     var items = [];
 
-    db("insert", { data: [{ name: "abba" }, {name:"baab"}]}).on("data", function(data) {
+    crudlet.clean(db)("insert", { data: [{ name: "abba" }, {name:"baab"}]}).on("data", function(data) {
       items.push(data);
     }).on("end", function() {
       expect(items.length).to.be(2);
@@ -197,8 +197,8 @@ describe(__filename + "#", function() {
 
   it("can upsert & insert an item", function(next) {
     var db   = crudlet.child(memoryDatabase(), { collection: "people" });
-    db("upsert", { data: { name: "abba"}, query: { name: "abba"}}).on("data", function() {
-      db("load", { query: { name: "abba" }}).on("data", function(data) {
+    crudlet.clean(db)("upsert", { data: { name: "abba"}, query: { name: "abba"}}).on("data", function() {
+      crudlet.clean(db)("load", { query: { name: "abba" }}).on("data", function(data) {
         expect(data.name).to.be("abba");
         next();
       });
@@ -206,7 +206,7 @@ describe(__filename + "#", function() {
   });
 
   it("can upsert & update an item", function(next) {
-    var db   = crudlet.child(memoryDatabase(), { collection: "people" });
+    var db   = crudlet.clean(crudlet.child(memoryDatabase(), { collection: "people" }));
     db("upsert", { data: { name: "abba"}, query: { name: "abba"}}).on("data", function() {
       db("upsert", { data: { age: 99 }, query: { name: "abba"}}).on("data", function() {
         db("load", { query: { name: "abba" }}).on("data", function(data) {

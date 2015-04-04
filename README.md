@@ -13,7 +13,7 @@ var crudlet = require("crudlet");
 var memorydb = require("crudlet-memory");
 
 var db = memorydb();
-db("insert", { data: { name: "blarg"}}).on("data", function() {
+db(crudlet.operation("insert", { data: { name: "blarg"}})).on("data", function() {
 
 });
 

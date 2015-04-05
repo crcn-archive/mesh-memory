@@ -230,4 +230,16 @@ describe(__filename + "#", function() {
       }, 5);
     })
   });
+
+  it("can add a TTL in the constructor", function(next) {
+    var db = crudlet.child(memoryDatabase({ttl:1}), { collection: "people" });
+    db(crudlet.op("insert", { data: { name: "abba" }})).on("data", function() {
+      setTimeout(function() {
+        db(crudlet.op("load")).pipe(_.pipeline(_.collect)).on("data", function(items) {
+          expect(items.length).to.be(0);
+          next();
+        });
+      }, 5);
+    })
+  });
 });

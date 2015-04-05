@@ -1,7 +1,8 @@
 var crudlet              = require("crudlet");
-var memoryDatabase = require("..");
+var memoryDatabase       = require("..");
 var sinon                = require("sinon");
 var expect               = require("expect.js");
+var _                    = require("highland");
 
 describe(__filename + "#", function() {
 
@@ -50,7 +51,7 @@ describe(__filename + "#", function() {
   it("can insert an item", function(next) {
     var db   = memoryDatabase({collection:"people"});
     crudlet.clean(db)("insert", { data: { name: "abba" }}).on("data", function() {
-      expect(db.target.db.people[0].name).to.be("abba");
+      expect(db.target.db.people.data[0].name).to.be("abba");
       next();
     });
   });
@@ -71,8 +72,8 @@ describe(__filename + "#", function() {
   it("can update an item with a query", function(next) {
     var db   = memoryDatabase({collection:"people"});
     var stream = crudlet.open(db).on("data", function() { }).on("end", function() {
-      expect(db.target.db.people[0].name).to.be("baab");
-      expect(db.target.db.people[1].name).to.be("abba");
+      expect(db.target.db.people.data[0].name).to.be("baab");
+      expect(db.target.db.people.data[1].name).to.be("abba");
       next();
     });
 
@@ -85,8 +86,8 @@ describe(__filename + "#", function() {
 
     var db   = memoryDatabase({collection:"people"});
     var stream = crudlet.open(db).on("data", function() { }).on("end", function() {
-      expect(db.target.db.people[0].name).to.be("baab");
-      expect(db.target.db.people[1].name).to.be("baab");
+      expect(db.target.db.people.data[0].name).to.be("baab");
+      expect(db.target.db.people.data[1].name).to.be("baab");
       next();
     });
 
@@ -100,7 +101,7 @@ describe(__filename + "#", function() {
 
     var db   = memoryDatabase({collection:"people"});
     var stream = crudlet.stream(db).on("data", function() { }).on("end", function() {
-      expect(db.target.db.people.length).to.be(1);
+      expect(db.target.db.people.data.length).to.be(1);
       next();
     });
 
@@ -112,7 +113,7 @@ describe(__filename + "#", function() {
   it("can remove multiple items", function(next) {
     var db   = memoryDatabase({collection:"people"});
     var stream = crudlet.stream(db).on("data", function() { }).on("end", function() {
-      expect(db.target.db.people.length).to.be(0);
+      expect(db.target.db.people.data.length).to.be(0);
       next();
     });
 
@@ -216,5 +217,17 @@ describe(__filename + "#", function() {
         });
       });
     });
+  });
+
+  it("can add a TTL to a database collection", function(next) {
+    var db = crudlet.child(memoryDatabase(), { collection: "people", ttl: 1 });
+    db(crudlet.op("insert", { data: { name: "abba" }})).on("data", function() {
+      setTimeout(function() {
+        db(crudlet.op("load")).pipe(_.pipeline(_.collect)).on("data", function(items) {
+          expect(items.length).to.be(0);
+          next();
+        });;
+      }, 5);
+    })
   });
 });

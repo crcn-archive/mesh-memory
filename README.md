@@ -1,32 +1,32 @@
-[![Build Status](https://travis-ci.org/mojo-js/crudlet-memory.svg)](https://travis-ci.org/mojo-js/crudlet-memory) [![Coverage Status](https://coveralls.io/repos/mojo-js/crudlet-memory/badge.svg?branch=master)](https://coveralls.io/r/mojo-js/crudlet-memory?branch=master) [![Dependency Status](https://david-dm.org/mojo-js/crudlet-memory.svg)](https://david-dm.org/mojo-js/crudlet-memory)
+[![Build Status](https://travis-ci.org/mojo-js/mesh-memory.svg)](https://travis-ci.org/mojo-js/mesh-memory) [![Coverage Status](https://coveralls.io/repos/mojo-js/mesh-memory/badge.svg?branch=master)](https://coveralls.io/r/mojo-js/mesh-memory?branch=master) [![Dependency Status](https://david-dm.org/mojo-js/mesh-memory.svg)](https://david-dm.org/mojo-js/mesh-memory)
 
-in-memory adapter for [crudlet](https://github.com/mojo-js/crudlet.js) - a library that makes it easy to persist data through multiple transports.
+in-memory adapter for [mesh](https://github.com/mojo-js/mesh.js) - a library that makes it easy to persist data through multiple transports.
 
 #### installation
 
 ```
-npm install crudlet-memory
+npm install mesh-memory
 ```
 
 ```javascript
-var crudlet = require("crudlet");
-var memorydb = require("crudlet-memory");
+var mesh = require("mesh");
+var memorydb = require("mesh-memory");
 
 var db = memorydb();
-db(crudlet.operation("insert", { data: { name: "blarg"}})).on("data", function() {
+db(mesh.operation("insert", { data: { name: "blarg"}})).on("data", function() {
 
 });
 
 // streaming operations
-crudlet.
+mesh.
 open(db).
-write(crudlet.operation("insert", { data: { name: "abba"}})).
-end(crudlet.operation("remove", { query: { name: "abba"}}));
+write(mesh.operation("insert", { data: { name: "abba"}})).
+end(mesh.operation("remove", { query: { name: "abba"}}));
 ```
 
 #### db memorydb(options)
 
-creates a local crudelt database
+creates a local meshelt database
 
 - `options` - options for the local db
   - `name` - name of db (optional)

@@ -226,9 +226,9 @@ describe(__filename + "#", function() {
         db(mesh.op("load")).pipe(_.pipeline(_.collect)).on("data", function(items) {
           expect(items.length).to.be(0);
           next();
-        });;
+        });
       }, 5);
-    })
+    });
   });
 
   it("can add a TTL in the constructor", function(next) {
@@ -240,6 +240,6 @@ describe(__filename + "#", function() {
           next();
         });
       }, 5);
-    })
+    });
   });
 });

@@ -142,6 +142,27 @@ describe(__filename + "#", function() {
 
   });
 
+  it("can use the idProperty from data in load if query is undefined", function(next) {
+
+    var db   = memoryDatabase({collection:"people", idProperty: "_id" });
+
+    db(mesh.op("insert", {
+      data: [
+        { _id: "m1", text: "a" },
+        { _id: "m2", text: "b" },
+        { _id: "m3", text: "c" }
+      ]
+    })).on("end", function() {
+      db(mesh.op("load", {
+        data: { _id: "m2", text: "do-not-query-this" }
+      })).on("data", function(data) {
+        expect(data._id).to.be("m2");
+        expect(data.text).to.be("b");
+        next();
+      });
+    });
+  });
+
   it("can load multiple items", function(next) {
     var db   = memoryDatabase({collection:"people"});
     var items = [];

@@ -6,7 +6,7 @@ var _                    = require("highland");
 var createTestCases      = require("mesh-store-test-cases");
 
 describe(__filename + "#", function() {
-atom
+
   var cases = createTestCases(memoryDatabase);
   for (var name in cases) it(name, cases[name]);
 

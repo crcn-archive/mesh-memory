@@ -8,6 +8,8 @@ var createTestCases      = require("mesh-store-test-cases");
 describe(__filename + "#", function() {
 
   var cases = createTestCases(memoryDatabase);
+
+  if (false)
   for (var name in cases) it(name, cases[name]);
 
   xit("can proper defaults", function() {

@@ -1,6 +1,6 @@
 {
   "name": "mesh-memory",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "local storage adapter (offline-mode) for mesh",
   "main": "./lib/index.js",
   "scripts": {
@@ -31,7 +31,6 @@
     "gulp-uglify": "^1.1.0",
     "highland": "^2.4.0",
     "karma": "^0.12.31",
-    "mesh": "1.0.x",
     "mesh-store-test-cases": "0.0.2",
     "protoclass": "0.0.6",
     "sinon": "^1.14.1",
@@ -41,6 +40,7 @@
   },
   "dependencies": {
     "fast-event-emitter": "0.0.2",
+    "mesh": "^1.0.x",
     "obj-stream": "0.0.x",
     "protoclass": "0.0.6",
     "sift": "^1.1.0",

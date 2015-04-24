@@ -42,7 +42,8 @@ describe(__filename + "#", function() {
 
     db("insert", { abba: { a: 1}}).on("error", function(err) {
       expect(err).not.to.be(void 0);
-    }).on("data", function() { }).on("end", next);
+      next();
+    });
 
   });
 

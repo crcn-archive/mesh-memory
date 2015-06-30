@@ -3,7 +3,7 @@ var memoryDatabase  = require("..");
 var sinon           = require("sinon");
 var expect          = require("expect.js");
 var _               = require("highland");
-var createTestCases = require("mesh/test-cases/database");
+var createTestCases = require("mesh/test/cases/database");
 
 describe(__filename + "#", function() {
 

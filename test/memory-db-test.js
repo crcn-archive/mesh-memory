@@ -11,7 +11,6 @@ describe(__filename + "#", function() {
 
   for (var name in cases) it(name, cases[name]);
 
-
   it("can add memory specific options", function(next) {
     var db   = memoryDatabase({ collection: "words", storageKey: "abba" });
     var setStub = sinon.spy(db.target, "insert");
